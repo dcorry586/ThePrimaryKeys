@@ -1,8 +1,6 @@
 -- 4. As a member of the Sales team I want to be able to create a new project. I should be able to store a project name, 
 -- value and a list of technologies that the project will use
 
-SHOW TABLES;
-
 -- create project table
 CREATE TABLE project (
 	project_id smallint unsigned AUTO_INCREMENT PRIMARY KEY,
@@ -15,20 +13,30 @@ CREATE TABLE project (
     FOREIGN KEY (tech_lead_delivery_id)
     REFERENCES delivery_employee(employee_id),
     FOREIGN KEY (client_id)
-    REFERENCES `client`(client_id)
+    REFERENCES `client`(client_id),
+    CHECK (completion_date >= start_date)
 );
-
--- check project completion date is after project start date
-ALTER TABLE project
-ADD CHECK (completion_date >= start_date);
-
-DESCRIBE project;
 
 -- create technology table
 CREATE TABLE technology (
 	technology_id smallint unsigned AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(100) NOT NULL
 );
+
+-- create project_technology table
+CREATE TABLE project_technology (
+	project_id smallint unsigned NOT NULL,
+    FOREIGN KEY(project_id) REFERENCES project(project_id),
+	technology_id smallint unsigned NOT NULL,
+    FOREIGN KEY(technology_id) REFERENCES technology(technology_id)
+);
+
+-- make composite key in project_technology table using project_id and technology_id
+ALTER TABLE project_technology
+ADD CONSTRAINT pk_project_id_technology_id
+PRIMARY KEY (project_id, technology_id);
+
+-- ADD DATA TO PROJECT TABLE
 
 -- invalid data, tech_lead_delivery_id is not a delivery employee
 INSERT INTO project
@@ -46,7 +54,7 @@ VALUES
 INSERT INTO project
 (`name`, `value`, start_date, completion_date, tech_lead_delivery_id, client_id)
 VALUES
-('nice project', 20000, '2023-11-12', '2023-12-12', 3, 2);
+('good project', 20000, '2023-11-12', '2023-12-12', 3, 3);
 
 -- valid data, completion date is after start date
 INSERT INTO project
@@ -66,9 +74,46 @@ INSERT INTO project
 VALUES
 (' project', 30000, '2023-12-17', '2023-10-17', 1, 2);
 
-SELECT * FROM project;
-SELECT * FROM `client`;
-SELECT * FROM delivery_employee;
+-- ADD DATA TO TECHNOLOGY TABLE
+INSERT INTO technology (`name`) VALUES ('Java');
+INSERT INTO technology (`name`) VALUES ('SQL');
+INSERT INTO technology (`name`) VALUES ('php');
+INSERT INTO technology (`name`) VALUES ('Python');
+INSERT INTO technology (`name`) VALUES ('ChatGPT');
+INSERT INTO technology (`name`) VALUES ('Docker');
+
+-- ADD DATA TO PROJECT TECHNOLOGY TABLE
+
+-- will fail to insert, project_id=1 doesn't exist
+INSERT INTO project_technology (project_id, technology_id) VALUES (1,1);
+
+-- will fail to insert, technology_id=13 doesn't exist
+INSERT INTO project_technology (project_id, technology_id) VALUES (9,13);
+
+-- will insert, both ids exist
+INSERT INTO project_technology (project_id, technology_id) VALUES (9,1);
+INSERT INTO project_technology (project_id, technology_id) VALUES (9,2);
+INSERT INTO project_technology (project_id, technology_id) VALUES (9,5);
+INSERT INTO project_technology (project_id, technology_id) VALUES (9,6);
+INSERT INTO project_technology (project_id, technology_id) VALUES (11,2);
+INSERT INTO project_technology (project_id, technology_id) VALUES (11,3);
+INSERT INTO project_technology (project_id, technology_id) VALUES (11,6);
+INSERT INTO project_technology (project_id, technology_id) VALUES (12,4);
+INSERT INTO project_technology (project_id, technology_id) VALUES (14,5);
+INSERT INTO project_technology (project_id, technology_id) VALUES (14,1);
+
+-- will fail, same values inserted, not allowed due to composite key
+INSERT INTO project_technology (project_id, technology_id) VALUES (14,1);
+
+-- join statements to find name of project and names of technologies on project
+SELECT project.`name`, GROUP_CONCAT(technology.`name` SEPARATOR ', ') 
+FROM project
+RIGHT JOIN project_technology
+ON project.project_id = project_technology.project_id
+LEFT JOIN technology
+ON technology.technology_id = project_technology.technology_id
+WHERE project.project_id = 9
+GROUP BY project.`name`;
 
 
 
