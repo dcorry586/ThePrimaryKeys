@@ -12,5 +12,10 @@ CREATE TABLE client(
 	FOREIGN KEY (sales_employee_id) REFERENCES sales_employee(sales_employee_id)
 );
 
+-- Insert data into table
+INSERT INTO client (name, address, phone_number, sales_employee_id)
+VALUES ('Bob Dylan', '123 somewhere over the rainbow St', '07935754333', 1);
 
+-- Select a record from table
+SELECT * FROM client;
 
