@@ -19,6 +19,9 @@ CREATE table sales_employee (
 
 INSERT INTO employee (first_name, last_name, salary, bank_account_number, NI_number) VALUES ('Stephen', 'Hanna', 50000.00, '23418921', 'JX458205B');
 INSERT INTO employee (first_name, last_name, salary, bank_account_number, NI_number) VALUES ('John', 'Smith', 40000.00, '23123921', 'JX904205B');
+INSERT INTO employee (first_name, last_name, salary, bank_account_number, NI_number) VALUES ('doctor', 'who', 35000, 10295674, 'PG836602Y');
+INSERT INTO employee (first_name, last_name, salary, bank_account_number, NI_number) VALUES ('bob', 'mcgee', 40000, 10299067, 'TR838602Y');
+INSERT INTO employee (first_name, last_name, salary, bank_account_number, NI_number) VALUES ('alice', 'mcfadden', 53000, 05673829, 'HG729602K');
 
 INSERT INTO sales_employee (employee_id, commission_rate) VALUES (1, 0.05);
 INSERT INTO sales_employee (employee_id, commission_rate) VALUES (2, 0.05);
