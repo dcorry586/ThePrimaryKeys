@@ -6,7 +6,7 @@ CREATE table employee (
     last_name varchar(70) NOT NULL,
     salary decimal(10,2) NOT NULL,
     bank_account_number varchar(8) NOT NULL,
-    NI_number varchar(9) NOT NULL,
+    national_insurance_number varchar(9) NOT NULL,
     PRIMARY KEY (employee_id)
 );
 
@@ -23,5 +23,6 @@ INSERT INTO employee (first_name, last_name, salary, bank_account_number, NI_num
 INSERT INTO sales_employee (employee_id, commission_rate) VALUES (1, 0.05);
 INSERT INTO sales_employee (employee_id, commission_rate) VALUES (2, 0.05);
 
-SELECT * FROM employee;
-SELECT * FROM sales_employee;
+SELECT employee_id, first_name, last_name, salary, bank_account_number, NI_number, commission_rate 
+FROM employee
+RIGHT JOIN sales_employee USING (employee_id);
