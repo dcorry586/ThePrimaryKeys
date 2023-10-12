@@ -3,16 +3,14 @@ USE ThePrimaryKeys_DylanC;
 -- Create table
 
 CREATE table project_delivery_employee (
-	project_delivery_emplopyee_id mediumint unsigned NOT NULL AUTO_INCREMENT,
 	project_id smallint unsigned NOT NULL,
 	delivery_employee_id smallint unsigned NOT NULL,
 	started_on_date date NOT NULL,
 	ended_on_date date,
-	PRIMARY KEY (project_delivery_emplopyee_id),
+	PRIMARY KEY (project_id, delivery_employee_id, started_on_date),
 	FOREIGN KEY (project_id) REFERENCES project(project_id),
 	FOREIGN KEY (delivery_employee_id) REFERENCES delivery_employee(employee_id)
 );
-
 
 -- Add sample data
 
@@ -30,6 +28,8 @@ VALUES (12, 3, '2023-10-14', '2023-11-12');
 
 -- Check data is there
 
-SELECT project_delivery_emplopyee_id, project_id, delivery_employee_id, started_on_date, ended_on_date  
-FROM project_delivery_employee pde ;
+SELECT name as 'Project Name', concat(first_name , ' ', last_name) as `Delivery Employee Name`, started_on_date, ended_on_date  
+FROM project_delivery_employee pde
+LEFT JOIN project p USING (project_id)
+LEFT JOIN employee e ON pde.delivery_employee_id = e.employee_id ;
 
