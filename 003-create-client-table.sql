@@ -16,5 +16,6 @@ CREATE TABLE IF NOT EXISTS client(
 INSERT INTO client (name, address, phone_number, sales_employee_id)
 VALUES ('Bob Dylan', '123 somewhere over the rainbow St', '07935754333', 1);
 
--- Select a record from table
-SELECT * FROM client where name = 'Bob Dylan';
+
+-- join and select column specifically for other branch
+SELECT client_id, name, address, phone_number, sales_employee_id from client;
